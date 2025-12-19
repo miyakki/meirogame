@@ -61,6 +61,24 @@ public class MapGameController implements Initializable {
         }
     }
 
+    private void resetMap() {
+        // reset the map
+        
+        mapData = new MapData(21, 15);
+        chara = new MoveChara(1, 1, mapData);
+        mapImageViews = new ImageView[mapData.getHeight() * mapData.getWidth()];
+        for (int y = 0; y < mapData.getHeight(); y++) {
+            for (int x = 0; x < mapData.getWidth(); x++) {
+                int index = y * mapData.getWidth() + x;
+                mapImageViews[index] = mapData.getImageView(x, y);
+            }
+        }
+
+        drawMap(chara, mapData);
+
+        startTimer();
+    }
+
     // Get users' key actions
     public void keyAction(KeyEvent event) {
         KeyCode key = event.getCode();
@@ -122,7 +140,7 @@ public class MapGameController implements Initializable {
 
     @FXML
     public void func2ButtonAction(ActionEvent event) {
-        System.out.println("func2: Nothing to do");
+       resetMap();
     }
 
     @FXML
