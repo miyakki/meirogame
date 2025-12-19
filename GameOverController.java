@@ -6,6 +6,7 @@ public class GameOverController {
  @FXML
  void onGameOverAction(ActionEvent event) {
   try {
+   StageDB.getGameOverSound().stop();
    StageDB.getGameOverStage().hide();
    StageDB.getMainSound().stop();
    

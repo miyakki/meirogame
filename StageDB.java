@@ -13,10 +13,12 @@ class StageDB {
     static private Stage gameOverStage = null;
     static private MediaPlayer mainSound = null;
     static private MediaPlayer gameOverSound = null;
+    static private MediaPlayer walkSound = null;
     @SuppressWarnings("rawtypes")
     static private Class mainClass;
     static private final String mainSoundFileName = "sound/MainSound.mp3"; // BGM by OtoLogic
     static private final String gameOverSoundFileName = "sound/GameOverSound.mp3";//!
+    static private final String walkSoundFileName = "sound/Walk.mp3";//!
 
     @SuppressWarnings("rawtypes")
     public static void setMainClass(Class mainClass) {
@@ -42,17 +44,34 @@ class StageDB {
     public static MediaPlayer getGameOverSound() {
         if (gameOverSound == null) {
             try {
-                Media g = new Media(new File(gameOverSoundFileName).toURI().toString());
-                MediaPlayer gp = new MediaPlayer(g);
-                gp.setCycleCount(MediaPlayer.INDEFINITE); // loop play
-                gp.setRate(1.0); // 1.0 = normal speed
-                gp.setVolume(0.5); // volume from 0.0 to 1.0
-                gameOverSound = gp;//!
+                Media m = new Media(new File(gameOverSoundFileName).toURI().toString());
+                MediaPlayer mp = new MediaPlayer(m);
+                mp.setCycleCount(MediaPlayer.INDEFINITE); // loop play
+                mp.setRate(1.0); // 1.0 = normal speed
+                mp.setVolume(0.5); // volume from 0.0 to 1.0
+                gameOverSound = mp;//!
             } catch (Exception io) {
                 System.err.print(io.getMessage());
             }
         }
         return gameOverSound;
+    }
+
+    public static MediaPlayer walkSound() {
+        if(walkSound == null) {
+            try {
+                Media m = new Media(new File(walkSoundFileName).toURI().toString());
+                MediaPlayer mp = new MediaPlayer(m);
+                mp.setVolume(0.5);
+                walkSound = mp;
+            } catch (Exception e) {
+                System.err.print(e.getMessage());
+                return walkSound;
+            }
+            walkSound.stop();
+            walkSound.play();
+        }
+        return walkSound;
     }
 
     public static Stage getMainStage() {
