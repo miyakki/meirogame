@@ -14,11 +14,13 @@ class StageDB {
     static private MediaPlayer mainSound = null;
     static private MediaPlayer gameOverSound = null;
     static private MediaPlayer walkSound = null;
+    static private MediaPlayer bumpSound = null;
     @SuppressWarnings("rawtypes")
     static private Class mainClass;
     static private final String mainSoundFileName = "sound/MainSound.mp3"; // BGM by OtoLogic
-    static private final String gameOverSoundFileName = "sound/GameOverSound.mp3";//!
-    static private final String walkSoundFileName = "sound/Walk.mp3";//!
+    static private final String gameOverSoundFileName = "sound/GameOverSound.mp3";
+    static private final String walkSoundFileName = "sound/Walk.mp3";
+    static private final String bumpSoundFileName = "sound/Bump.mp3";
 
     @SuppressWarnings("rawtypes")
     public static void setMainClass(Class mainClass) {
@@ -49,7 +51,7 @@ class StageDB {
                 mp.setCycleCount(MediaPlayer.INDEFINITE); // loop play
                 mp.setRate(1.0); // 1.0 = normal speed
                 mp.setVolume(0.5); // volume from 0.0 to 1.0
-                gameOverSound = mp;//!
+                gameOverSound = mp;
             } catch (Exception io) {
                 System.err.print(io.getMessage());
             }
@@ -57,11 +59,12 @@ class StageDB {
         return gameOverSound;
     }
 
-    public static MediaPlayer walkSound() {
+    public static MediaPlayer getWalkSound() {
         if(walkSound == null) {
             try {
                 Media m = new Media(new File(walkSoundFileName).toURI().toString());
                 MediaPlayer mp = new MediaPlayer(m);
+                mp.setRate(1.0);
                 mp.setVolume(0.5);
                 walkSound = mp;
             } catch (Exception e) {
@@ -72,6 +75,24 @@ class StageDB {
             walkSound.play();
         }
         return walkSound;
+    }
+
+    public static MediaPlayer getBumpSound() {
+        if(bumpSound == null) {
+            try {
+                Media m = new Media(new File(bumpSoundFileName).toURI().toString());
+                MediaPlayer mp = new MediaPlayer(m);
+                mp.setRate(1.0);
+                mp.setVolume(0.5);
+                bumpSound = mp;
+            } catch (Exception e) {
+                System.err.print(e.getMessage());
+                return bumpSound;
+            }
+            bumpSound.stop();
+            bumpSound.play();
+        }
+        return bumpSound;
     }
 
     public static Stage getMainStage() {
