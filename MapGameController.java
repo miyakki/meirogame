@@ -98,7 +98,12 @@ public class MapGameController implements Initializable {
     public void upButtonAction() {
         printAction("UP");
         chara.setCharaDirection(MoveChara.TYPE_UP);
-        chara.move(0, -1);
+        boolean success = chara.move(0, -1);
+        if(success == true) {
+            StageDB.getWalkSound().play();
+        } else {
+            StageDB.getBumpSound().play();
+        }
         drawMap(chara, mapData);
     }
 
@@ -106,7 +111,12 @@ public class MapGameController implements Initializable {
     public void downButtonAction() {
         printAction("DOWN");
         chara.setCharaDirection(MoveChara.TYPE_DOWN);
-        chara.move(0, 1);
+        boolean success = chara.move(0, 1);
+        if(success == true) {
+            StageDB.getWalkSound().play();
+        } else {
+            StageDB.getBumpSound().play();
+        }
         drawMap(chara, mapData);
     }
 
@@ -114,7 +124,12 @@ public class MapGameController implements Initializable {
     public void leftButtonAction() {
         printAction("LEFT");
         chara.setCharaDirection(MoveChara.TYPE_LEFT);
-        chara.move(-1, 0);
+        boolean success = chara.move(-1, 0);
+        if(success == true) {
+            StageDB.getWalkSound().play();
+        } else {
+            StageDB.getBumpSound().play();
+        }
         drawMap(chara, mapData);
     }
 
@@ -122,7 +137,12 @@ public class MapGameController implements Initializable {
     public void rightButtonAction() {
         printAction("RIGHT");
         chara.setCharaDirection(MoveChara.TYPE_RIGHT);
-        chara.move(1, 0);
+        boolean success = chara.move(1, 0);
+        if(success == true) {
+            StageDB.getWalkSound().play();
+        } else {
+            StageDB.getBumpSound().play();
+        }
         drawMap(chara, mapData);
     }
 
