@@ -34,11 +34,18 @@ class StageDB {
                 MediaPlayer mp = new MediaPlayer(m);
                 mp.setCycleCount(MediaPlayer.INDEFINITE); // loop play
                 mp.setRate(1.0); // 1.0 = normal speed
-                mp.setVolume(0.5); // volume from 0.0 to 1.0
+                mp.setVolume(0.2); // volume from 0.0 to 1.0
                 mainSound = mp;
+                mainSound.setOnReady(() -> {
+                    mainSound.setVolume(0.2);
+                    mainSound.play();
+                });
             } catch (Exception io) {
                 System.err.print(io.getMessage());
             }
+        }
+        if(mainSound != null) {
+            mainSound.setVolume(0.2);
         }
         return mainSound;
     }
@@ -50,7 +57,7 @@ class StageDB {
                 MediaPlayer mp = new MediaPlayer(m);
                 mp.setCycleCount(MediaPlayer.INDEFINITE);
                 mp.setRate(1.0);
-                mp.setVolume(0.5);
+                mp.setVolume(0.2);
                 gameOverSound = mp;
             } catch (Exception io) {
                 System.err.print(io.getMessage());
@@ -59,38 +66,38 @@ class StageDB {
         return gameOverSound;
     }
 
-    public static MediaPlayer getWalkSound() {
+    public static MediaPlayer playWalkSound() {
         if(walkSound == null) {
             try {
                 Media m = new Media(new File(walkSoundFileName).toURI().toString());
                 MediaPlayer mp = new MediaPlayer(m);
-                mp.setRate(1.0);
                 mp.setVolume(0.5);
                 walkSound = mp;
             } catch (Exception e) {
                 System.err.print(e.getMessage());
-                return walkSound;
             }
-            walkSound.stop();
-            walkSound.play();
         }
+        if(bumpSound != null) bumpSound.stop();
+
+        walkSound.stop();
+        walkSound.seek(javafx.util.Duration.ZERO);
+        walkSound.play();
         return walkSound;
     }
 
-    public static MediaPlayer getBumpSound() {
-        if(bumpSound == null) {
-            try {
-                Media m = new Media(new File(bumpSoundFileName).toURI().toString());
-                MediaPlayer mp = new MediaPlayer(m);
-                mp.setRate(1.0);
-                mp.setVolume(0.5);
-                bumpSound = mp;
+    public static MediaPlayer playBumpSound() {
+        try {
+            Media m = new Media(new File(bumpSoundFileName).toURI().toString());
+            MediaPlayer mp = new MediaPlayer(m);
+            mp.setVolume(0.5);
+            if(walkSound != null) {
+            walkSound.stop();
+            }
+            mp.play();
+            bumpSound = mp;
+
             } catch (Exception e) {
                 System.err.print(e.getMessage());
-                return bumpSound;
-            }
-            bumpSound.stop();
-            bumpSound.play();
         }
         return bumpSound;
     }

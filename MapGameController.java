@@ -100,9 +100,9 @@ public class MapGameController implements Initializable {
         chara.setCharaDirection(MoveChara.TYPE_UP);
         boolean success = chara.move(0, -1);
         if(success == true) {
-            StageDB.getWalkSound().play();
+            StageDB.playWalkSound();
         } else {
-            StageDB.getBumpSound().play();
+            StageDB.playBumpSound();
         }
         drawMap(chara, mapData);
     }
@@ -113,9 +113,9 @@ public class MapGameController implements Initializable {
         chara.setCharaDirection(MoveChara.TYPE_DOWN);
         boolean success = chara.move(0, 1);
         if(success == true) {
-            StageDB.getWalkSound().play();
+            StageDB.playWalkSound();
         } else {
-            StageDB.getBumpSound().play();
+            StageDB.playBumpSound();
         }
         drawMap(chara, mapData);
     }
@@ -126,9 +126,9 @@ public class MapGameController implements Initializable {
         chara.setCharaDirection(MoveChara.TYPE_LEFT);
         boolean success = chara.move(-1, 0);
         if(success == true) {
-            StageDB.getWalkSound().play();
+            StageDB.playWalkSound();
         } else {
-            StageDB.getBumpSound().play();
+            StageDB.playBumpSound();
         }
         drawMap(chara, mapData);
     }
@@ -139,9 +139,9 @@ public class MapGameController implements Initializable {
         chara.setCharaDirection(MoveChara.TYPE_RIGHT);
         boolean success = chara.move(1, 0);
         if(success == true) {
-            StageDB.getWalkSound().play();
+            StageDB.playWalkSound();
         } else {
-            StageDB.getBumpSound().play();
+            StageDB.playBumpSound();
         }
         drawMap(chara, mapData);
     }
@@ -219,5 +219,4 @@ public class MapGameController implements Initializable {
             System.out.println(ex.getMessage());
         }
     }
-
 }

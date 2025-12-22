@@ -10,7 +10,7 @@ public class MapGame extends Application {
     stage.hide();
     StageDB.setMainClass(getClass());
     StageDB.getMainStage().show();
-    StageDB.getMainSound().play();
+    StageDB.getMainSound();
   }
 
   public static void main(String[] args) {
