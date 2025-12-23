@@ -1,0 +1,118 @@
+<Label text=" Life: " />
+    <HBox fx:id="lifeBox" spacing="5" alignment="CENTER_LEFT">
+
+
+
+@FXML
+private HBox lifeBox; // FXMLで定義したIDと紐付け
+
+private int life = 3;
+private final String HEART_IMAGE_PATH = "png/heart.png"; // ハートの画像パス
+
+@Override
+public void initialize(URL url, ResourceBundle rb) {
+    // ...既存の初期化処理...
+    drawLifeUI();
+    startTimer();
+}
+
+// ライフの表示を更新するメソッド
+private void drawLifeUI() {
+    lifeBox.getChildren().clear();
+    for (int i = 0; i < life; i++) {
+        ImageView heart = new ImageView(new Image(HEART_IMAGE_PATH));
+        heart.setFitWidth(30);  // サイズ調整
+        heart.setFitHeight(30); // サイズ調整
+        lifeBox.getChildren().add(heart);
+    }
+}
+
+// ライフを減らすメソッド
+public void reduceLife() {
+    life--;
+    drawLifeUI();
+    if (life <= 0) {
+        System.out.println("No Lives Left!");
+        stopGameAndGoToGameOver();
+    }
+}
+
+public static final int TYPE_SPACE = 0;
+public static final int TYPE_WALL = 1;
+public static final int TYPE_HEAL = 3;   // 回復アイテム
+public static final int TYPE_DAMAGE = 4; // ダメージアイテム
+
+private static final String mapImageFiles[] = {
+    "png/SPACE.png",
+    "png/WALL.png",
+    "png/SPACE.png",  // ダミー（TYPE_OTHERS用）
+    "png/HEAL.png",   // 回復アイテムの画像パス
+    "png/DAMAGE.png"  // ダメージアイテムの画像パス
+};
+
+
+
+// コンストラクタの中でアイテムを配置
+MapData(int x, int y) {
+    // ...既存の初期化処理...
+    mapImages = new Image[5]; // サイズを5に変更
+    for (int i = 0; i < 5; i++) {
+        mapImages[i] = new Image(mapImageFiles[i]);
+    }
+    // ...既存の迷路生成(fillMap, digMap)...
+
+    // アイテムをランダムに配置
+    scatterItems(TYPE_HEAL, 2);
+    scatterItems(TYPE_DAMAGE, 2);
+    
+    setImageViews(); // 最後にImageViewを生成
+}
+
+// 空いている場所にアイテムをランダムに置くメソッド
+private void scatterItems(int type, int count) {
+    int placed = 0;
+    while (placed < count) {
+        int rx = (int) (Math.random() * width);
+        int ry = (int) (Math.random() * height);
+        // 床(TYPE_SPACE)かつ、スタート地点(1,1)以外に配置
+        if (getMap(rx, ry) == TYPE_SPACE && !(rx == 1 && ry == 1)) {
+            maps[ry][rx] = type;
+            placed++;
+        }
+    }
+}
+
+
+private void checkItemGet() {
+    int curX = chara.getPosX();
+    int curY = chara.getPosY();
+    int tileType = mapData.getMap(curX, curY);
+
+    if (tileType == MapData.TYPE_HEAL) {
+        System.out.println("Life Up!");
+        life = Math.min(3, life + 1); // 最大3まで回復
+        removeItem(curX, curY);
+    } else if (tileType == MapData.TYPE_DAMAGE) {
+        System.out.println("Life Down!");
+        reduceLife(); // 前の回答で作ったライフ減少メソッド
+        removeItem(curX, curY);
+    }
+}
+
+// アイテムを拾ったらその場所を床(SPACE)に戻す
+private void removeItem(int x, int y) {
+    mapData.setMap(x, y, MapData.TYPE_SPACE);
+    // マップ表示用のImageViewも床に更新
+    int index = y * mapData.getWidth() + x;
+    mapImageViews[index] = mapData.getImageView(x, y); 
+    drawLifeUI(); // ライフ表示を更新
+}
+
+// 各移動ボタンのアクション（upButtonActionなど）の最後に checkItemGet() を追加
+public void upButtonAction() {
+    chara.setCharaDirection(MoveChara.TYPE_UP);
+    if (chara.move(0, -1)) {
+        checkItemGet(); // ここで判定
+    }
+    drawMap(chara, mapData);
+}
