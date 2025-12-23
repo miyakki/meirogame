@@ -6,6 +6,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.AudioClip;
 
 class StageDB {
 
@@ -13,14 +14,16 @@ class StageDB {
     static private Stage gameOverStage = null;
     static private MediaPlayer mainSound = null;
     static private MediaPlayer gameOverSound = null;
-    static private MediaPlayer walkSound = null;
-    static private MediaPlayer bumpSound = null;
+    static private AudioClip walkSound;
+    static private AudioClip bumpSound;
+    static private AudioClip getItemSound;
     @SuppressWarnings("rawtypes")
     static private Class mainClass;
     static private final String mainSoundFileName = "sound/MainSound.mp3"; // BGM by OtoLogic
     static private final String gameOverSoundFileName = "sound/GameOverSound.mp3";
     static private final String walkSoundFileName = "sound/Walk.mp3";
     static private final String bumpSoundFileName = "sound/Bump.mp3";
+    static private final String getItemSoundFileName = "sound/GetItem.mp3";
 
     @SuppressWarnings("rawtypes")
     public static void setMainClass(Class mainClass) {
@@ -34,18 +37,11 @@ class StageDB {
                 MediaPlayer mp = new MediaPlayer(m);
                 mp.setCycleCount(MediaPlayer.INDEFINITE); // loop play
                 mp.setRate(1.0); // 1.0 = normal speed
-                mp.setVolume(0.2); // volume from 0.0 to 1.0
+                mp.setVolume(0.5);
                 mainSound = mp;
-                mainSound.setOnReady(() -> {
-                    mainSound.setVolume(0.2);
-                    mainSound.play();
-                });
             } catch (Exception io) {
                 System.err.print(io.getMessage());
             }
-        }
-        if(mainSound != null) {
-            mainSound.setVolume(0.2);
         }
         return mainSound;
     }
@@ -57,7 +53,7 @@ class StageDB {
                 MediaPlayer mp = new MediaPlayer(m);
                 mp.setCycleCount(MediaPlayer.INDEFINITE);
                 mp.setRate(1.0);
-                mp.setVolume(0.2);
+                mp.setVolume(0.5);
                 gameOverSound = mp;
             } catch (Exception io) {
                 System.err.print(io.getMessage());
@@ -66,40 +62,59 @@ class StageDB {
         return gameOverSound;
     }
 
-    public static MediaPlayer playWalkSound() {
+    public static void playWalkSound() {
         if(walkSound == null) {
             try {
-                Media m = new Media(new File(walkSoundFileName).toURI().toString());
-                MediaPlayer mp = new MediaPlayer(m);
-                mp.setVolume(0.5);
-                walkSound = mp;
+                walkSound = new AudioClip(
+                    StageDB.class
+                        .getResource("sound/Walk.mp3")
+                        .toExternalForm()
+                );
+                walkSound.setVolume(1.0);
             } catch (Exception e) {
                 System.err.print(e.getMessage());
             }
         }
-        if(bumpSound != null) bumpSound.stop();
-
-        walkSound.stop();
-        walkSound.seek(javafx.util.Duration.ZERO);
-        walkSound.play();
-        return walkSound;
+        if(!walkSound.isPlaying()) {
+            walkSound.play();
+        }
     }
 
-    public static MediaPlayer playBumpSound() {
-        try {
-            Media m = new Media(new File(bumpSoundFileName).toURI().toString());
-            MediaPlayer mp = new MediaPlayer(m);
-            mp.setVolume(0.5);
-            if(walkSound != null) {
+    public static void stopWalkSound() {
+        if(walkSound != null) {
             walkSound.stop();
-            }
-            mp.play();
-            bumpSound = mp;
+        }
+    }
 
+    public static void playBumpSound() {
+        try {
+            bumpSound = new AudioClip(
+                StageDB.class
+                    .getResource("sound/Bump.mp3")
+                    .toExternalForm()
+            );
             } catch (Exception e) {
                 System.err.print(e.getMessage());
-        }
-        return bumpSound;
+            }
+            if(walkSound != null) {
+                walkSound.stop();
+            }
+        bumpSound.setVolume(1.0);
+        bumpSound.play();
+    }
+
+    public static void playGetItemSound() {
+            try {
+                getItemSound = new AudioClip(
+                    StageDB.class
+                        .getResource("sound/GetItem.mp3")
+                        .toExternalForm()
+                );
+            } catch (Exception e) {
+                System.err.print(e.getMessage());
+            }
+        getItemSound.setVolume(1.0);
+        getItemSound.play();
     }
 
     public static Stage getMainStage() {

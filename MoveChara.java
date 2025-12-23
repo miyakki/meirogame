@@ -155,6 +155,7 @@ public class MoveChara {
         int nextX = posX + (dx * speed);
         int nextY = posY + (dy * speed);
         if (mapData.getMap(nextX, nextY) == MapData.TYPE_ITEM){
+            StageDB.playGetItemSound();
             System.out.println("Speed Up!");
             setSpeed(2);
             mapData.setMap(nextX, nextY, MapData.TYPE_SPACE);

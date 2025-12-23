@@ -212,6 +212,7 @@ public class MapGameController implements Initializable {
         try {
             System.out.println("Time Over");
             StageDB.getMainStage().hide();
+            StageDB.stopWalkSound();
             StageDB.getMainSound().stop();
             StageDB.getGameOverSound().play();
             StageDB.getGameOverStage().show();
