@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import javafx.scene.image.Image; 
+import javafx.scene.layout.HBox;
 
 public class MapGameController implements Initializable {
     public MapData mapData;
@@ -27,6 +29,12 @@ public class MapGameController implements Initializable {
     private javafx.animation.Timeline timer;
     private int remainingSeconds = 30;
 
+    @FXML
+    private HBox lifeBox; // FXMLで定義したIDと紐付け
+
+    private int life = 3;
+    private final String HEART_IMAGE_PATH = "png/catLeft2.png"; // ハートの画像パス
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mapData = new MapData(21, 15);
@@ -39,7 +47,7 @@ public class MapGameController implements Initializable {
             }
         }
         drawMap(chara, mapData);
-
+        drawLifeUI();
         // timer starts.
         startTimer();
     }
@@ -104,6 +112,7 @@ public class MapGameController implements Initializable {
         } else {
             StageDB.playBumpSound();
         }
+        checkItemGet();
         drawMap(chara, mapData);
     }
 
@@ -117,6 +126,7 @@ public class MapGameController implements Initializable {
         } else {
             StageDB.playBumpSound();
         }
+        checkItemGet();
         drawMap(chara, mapData);
     }
 
@@ -130,6 +140,7 @@ public class MapGameController implements Initializable {
         } else {
             StageDB.playBumpSound();
         }
+        checkItemGet();
         drawMap(chara, mapData);
     }
 
@@ -143,6 +154,7 @@ public class MapGameController implements Initializable {
         } else {
             StageDB.playBumpSound();
         }
+        checkItemGet();
         drawMap(chara, mapData);
     }
 
@@ -173,11 +185,56 @@ public class MapGameController implements Initializable {
         System.out.println("func4: Nothing to do");
     }
 
+    // ライフの表示を更新するメソッド
+    private void drawLifeUI() {
+        lifeBox.getChildren().clear();
+        for (int i = 0; i < life; i++) {
+            ImageView heart = new ImageView(new Image(HEART_IMAGE_PATH));
+            heart.setFitWidth(30);  // サイズ調整
+            heart.setFitHeight(30); // サイズ調整
+            lifeBox.getChildren().add(heart);
+        }
+    }
+
+// ライフを減らすメソッド
+    public void reduceLife() {
+    life--;
+        drawLifeUI();
+        if (life <= 0) {
+         System.out.println("No Lives Left!");
+         onTimeUp();
+        }
+    }
+
     // Print actions of user inputs
     public void printAction(String actionString) {
         System.out.println("Action: " + actionString);
     }
+    private void checkItemGet() {
+        int curX = chara.getPosX();
+        int curY = chara.getPosY();
+        int tileType = mapData.getMap(curX, curY);
 
+        if (tileType == MapData.TYPE_HEAL) {
+            System.out.println("Life Up!");
+            life = Math.min(3, life + 1); // 最大3まで回復
+            removeItem(curX, curY);
+        } else if (tileType == MapData.TYPE_DAMAGE) {
+            System.out.println("Life Down!");
+            reduceLife(); // 前の回答で作ったライフ減少メソッド
+            removeItem(curX, curY);
+        }
+    }
+
+// アイテムを拾ったらその場所を床(SPACE)に戻す
+    private void removeItem(int x, int y) {
+        mapData.setMap(x, y, MapData.TYPE_SPACE);
+        // マップ表示用のImageViewも床に更新
+        int index = y * mapData.getWidth() + x;
+        mapImageViews[index] = mapData.getImageView(x, y); 
+        drawLifeUI(); // ライフ表示を更新
+    }
+    
     private void startTimer(){
         if (timer != null){
             timer.stop();
