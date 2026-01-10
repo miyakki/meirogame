@@ -34,10 +34,6 @@ public class MoveChara {
     private ImageAnimation[] charaImageAnimations;
 
     private int charaDirection;
-    private int speed = 1;
-    public void setSpeed(int s ){
-        this.speed = s;
-    }
 
     MoveChara(int startX, int startY, MapData mapData) {
         this.mapData = mapData;
@@ -152,30 +148,14 @@ public class MoveChara {
 
     // move the cat
     public boolean move(int dx, int dy) {
-        int nextX = posX + (dx * speed);
-        int nextY = posY + (dy * speed);
-        if (mapData.getMap(nextX, nextY) == MapData.TYPE_ITEM){
-            StageDB.playGetItemSound();
-            System.out.println("Speed Up!");
-            setSpeed(2);
-            mapData.setMap(nextX, nextY, MapData.TYPE_SPACE);
-            mapData.setImageViews();
-        }
-        if (mapData.getMap(nextX, nextY) != MapData.TYPE_WALL && mapData.getMap(posX + dx, posY+dy) != MapData.TYPE_WALL) {
-            posX = nextX;
-            posY = nextY;
-	        System.out.println("chara[X,Y]:" + posX + "," + posY);
-            return true;
-        }
-        else if(mapData.getMap(nextX, nextY) == MapData.TYPE_WALL && mapData.getMap(posX + dx, posY + dy) != MapData.TYPE_WALL){
+        if (isMovable(dx, dy)) {
             posX += dx;
             posY += dy;
-            System.out.println("chara[X,Y]:" + posX + "," + posY);
+	    System.out.println("chara[X,Y]:" + posX + "," + posY);
             return true;
+        } else {
+            return false;
         }
-        return false;
-
-        
     }
 
     // getter: direction of the cat

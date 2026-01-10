@@ -6,7 +6,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.AudioClip;
 
 class StageDB {
 
@@ -14,16 +13,9 @@ class StageDB {
     static private Stage gameOverStage = null;
     static private MediaPlayer mainSound = null;
     static private MediaPlayer gameOverSound = null;
-    static private AudioClip walkSound;
-    static private AudioClip bumpSound;
-    static private AudioClip getItemSound;
     @SuppressWarnings("rawtypes")
     static private Class mainClass;
-    static private final String mainSoundFileName = "sound/MainSound.mp3"; // BGM by OtoLogic
-    static private final String gameOverSoundFileName = "sound/GameOverSound.mp3";
-    static private final String walkSoundFileName = "sound/Walk.mp3";
-    static private final String bumpSoundFileName = "sound/Bump.mp3";
-    static private final String getItemSoundFileName = "sound/GetItem.mp3";
+    static private final String mainSoundFileName = "sound/JoyToTheWorld.mp3"; // BGM by OtoLogic
 
     @SuppressWarnings("rawtypes")
     public static void setMainClass(Class mainClass) {
@@ -37,7 +29,7 @@ class StageDB {
                 MediaPlayer mp = new MediaPlayer(m);
                 mp.setCycleCount(MediaPlayer.INDEFINITE); // loop play
                 mp.setRate(1.0); // 1.0 = normal speed
-                mp.setVolume(0.5);
+                mp.setVolume(0.5); // volume from 0.0 to 1.0
                 mainSound = mp;
             } catch (Exception io) {
                 System.err.print(io.getMessage());
@@ -49,72 +41,12 @@ class StageDB {
     public static MediaPlayer getGameOverSound() {
         if (gameOverSound == null) {
             try {
-                Media m = new Media(new File(gameOverSoundFileName).toURI().toString());
-                MediaPlayer mp = new MediaPlayer(m);
-                mp.setCycleCount(MediaPlayer.INDEFINITE);
-                mp.setRate(1.0);
-                mp.setVolume(0.5);
-                gameOverSound = mp;
+                // please write down the code for playing gameover sound
             } catch (Exception io) {
                 System.err.print(io.getMessage());
             }
         }
         return gameOverSound;
-    }
-
-    public static void playWalkSound() {
-        if(walkSound == null) {
-            try {
-                walkSound = new AudioClip(
-                    StageDB.class
-                        .getResource("sound/Walk.mp3")
-                        .toExternalForm()
-                );
-                walkSound.setVolume(1.0);
-            } catch (Exception e) {
-                System.err.print(e.getMessage());
-            }
-        }
-        if(!walkSound.isPlaying()) {
-            walkSound.play();
-        }
-    }
-
-    public static void stopWalkSound() {
-        if(walkSound != null) {
-            walkSound.stop();
-        }
-    }
-
-    public static void playBumpSound() {
-        try {
-            bumpSound = new AudioClip(
-                StageDB.class
-                    .getResource("sound/Bump.mp3")
-                    .toExternalForm()
-            );
-            } catch (Exception e) {
-                System.err.print(e.getMessage());
-            }
-            if(walkSound != null) {
-                walkSound.stop();
-            }
-        bumpSound.setVolume(1.0);
-        bumpSound.play();
-    }
-
-    public static void playGetItemSound() {
-            try {
-                getItemSound = new AudioClip(
-                    StageDB.class
-                        .getResource("sound/GetItem.mp3")
-                        .toExternalForm()
-                );
-            } catch (Exception e) {
-                System.err.print(e.getMessage());
-            }
-        getItemSound.setVolume(1.0);
-        getItemSound.play();
     }
 
     public static Stage getMainStage() {

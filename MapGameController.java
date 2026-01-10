@@ -11,8 +11,6 @@ import javafx.fxml.FXML;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import javafx.scene.image.Image; 
-import javafx.scene.layout.HBox;
 
 public class MapGameController implements Initializable {
     public MapData mapData;
@@ -29,12 +27,6 @@ public class MapGameController implements Initializable {
     private javafx.animation.Timeline timer;
     private int remainingSeconds = 30;
 
-    @FXML
-    private HBox lifeBox; // FXMLで定義したIDと紐付け
-
-    private int life = 3;
-    private final String HEART_IMAGE_PATH = "png/catLeft2.png"; // ハートの画像パス
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mapData = new MapData(21, 15);
@@ -47,7 +39,7 @@ public class MapGameController implements Initializable {
             }
         }
         drawMap(chara, mapData);
-        drawLifeUI();
+
         // timer starts.
         startTimer();
     }
@@ -69,35 +61,17 @@ public class MapGameController implements Initializable {
         }
     }
 
-    private void resetMap() {
-        // reset the map
-        
-        mapData = new MapData(21, 15);
-        chara = new MoveChara(1, 1, mapData);
-        mapImageViews = new ImageView[mapData.getHeight() * mapData.getWidth()];
-        for (int y = 0; y < mapData.getHeight(); y++) {
-            for (int x = 0; x < mapData.getWidth(); x++) {
-                int index = y * mapData.getWidth() + x;
-                mapImageViews[index] = mapData.getImageView(x, y);
-            }
-        }
-
-        drawMap(chara, mapData);
-
-        startTimer();
-    }
-
     // Get users' key actions
     public void keyAction(KeyEvent event) {
         KeyCode key = event.getCode();
         System.out.println("keycode:" + key);
-        if (key == KeyCode.A) {
+        if (key == KeyCode.H) {
             leftButtonAction();
-        } else if (key == KeyCode.S) {
+        } else if (key == KeyCode.J) {
             downButtonAction();
-        } else if (key == KeyCode.W) {
+        } else if (key == KeyCode.K) {
             upButtonAction();
-        } else if (key == KeyCode.D) {
+        } else if (key == KeyCode.L) {
             rightButtonAction();
         }
     }
@@ -106,13 +80,7 @@ public class MapGameController implements Initializable {
     public void upButtonAction() {
         printAction("UP");
         chara.setCharaDirection(MoveChara.TYPE_UP);
-        boolean success = chara.move(0, -1);
-        if(success == true) {
-            StageDB.playWalkSound();
-        } else {
-            StageDB.playBumpSound();
-        }
-        checkItemGet();
+        chara.move(0, -1);
         drawMap(chara, mapData);
     }
 
@@ -120,13 +88,7 @@ public class MapGameController implements Initializable {
     public void downButtonAction() {
         printAction("DOWN");
         chara.setCharaDirection(MoveChara.TYPE_DOWN);
-        boolean success = chara.move(0, 1);
-        if(success == true) {
-            StageDB.playWalkSound();
-        } else {
-            StageDB.playBumpSound();
-        }
-        checkItemGet();
+        chara.move(0, 1);
         drawMap(chara, mapData);
     }
 
@@ -134,13 +96,7 @@ public class MapGameController implements Initializable {
     public void leftButtonAction() {
         printAction("LEFT");
         chara.setCharaDirection(MoveChara.TYPE_LEFT);
-        boolean success = chara.move(-1, 0);
-        if(success == true) {
-            StageDB.playWalkSound();
-        } else {
-            StageDB.playBumpSound();
-        }
-        checkItemGet();
+        chara.move(-1, 0);
         drawMap(chara, mapData);
     }
 
@@ -148,13 +104,7 @@ public class MapGameController implements Initializable {
     public void rightButtonAction() {
         printAction("RIGHT");
         chara.setCharaDirection(MoveChara.TYPE_RIGHT);
-        boolean success = chara.move(1, 0);
-        if(success == true) {
-            StageDB.playWalkSound();
-        } else {
-            StageDB.playBumpSound();
-        }
-        checkItemGet();
+        chara.move(1, 0);
         drawMap(chara, mapData);
     }
 
@@ -172,7 +122,7 @@ public class MapGameController implements Initializable {
 
     @FXML
     public void func2ButtonAction(ActionEvent event) {
-       resetMap();
+        System.out.println("func2: Nothing to do");
     }
 
     @FXML
@@ -185,56 +135,11 @@ public class MapGameController implements Initializable {
         System.out.println("func4: Nothing to do");
     }
 
-    // ライフの表示を更新するメソッド
-    private void drawLifeUI() {
-        lifeBox.getChildren().clear();
-        for (int i = 0; i < life; i++) {
-            ImageView heart = new ImageView(new Image(HEART_IMAGE_PATH));
-            heart.setFitWidth(30);  // サイズ調整
-            heart.setFitHeight(30); // サイズ調整
-            lifeBox.getChildren().add(heart);
-        }
-    }
-
-// ライフを減らすメソッド
-    public void reduceLife() {
-    life--;
-        drawLifeUI();
-        if (life <= 0) {
-         System.out.println("No Lives Left!");
-         onTimeUp();
-        }
-    }
-
     // Print actions of user inputs
     public void printAction(String actionString) {
         System.out.println("Action: " + actionString);
     }
-    private void checkItemGet() {
-        int curX = chara.getPosX();
-        int curY = chara.getPosY();
-        int tileType = mapData.getMap(curX, curY);
 
-        if (tileType == MapData.TYPE_HEAL) {
-            System.out.println("Life Up!");
-            life = Math.min(3, life + 1); // 最大3まで回復
-            removeItem(curX, curY);
-        } else if (tileType == MapData.TYPE_DAMAGE) {
-            System.out.println("Life Down!");
-            reduceLife(); // 前の回答で作ったライフ減少メソッド
-            removeItem(curX, curY);
-        }
-    }
-
-// アイテムを拾ったらその場所を床(SPACE)に戻す
-    private void removeItem(int x, int y) {
-        mapData.setMap(x, y, MapData.TYPE_SPACE);
-        // マップ表示用のImageViewも床に更新
-        int index = y * mapData.getWidth() + x;
-        mapImageViews[index] = mapData.getImageView(x, y); 
-        drawLifeUI(); // ライフ表示を更新
-    }
-    
     private void startTimer(){
         if (timer != null){
             timer.stop();
@@ -269,12 +174,11 @@ public class MapGameController implements Initializable {
         try {
             System.out.println("Time Over");
             StageDB.getMainStage().hide();
-            StageDB.stopWalkSound();
             StageDB.getMainSound().stop();
-            StageDB.getGameOverSound().play();
             StageDB.getGameOverStage().show();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
+
 }

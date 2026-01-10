@@ -23,10 +23,6 @@
       <Label text="Time left:"/>
       <Label fx:id="timerLabel" text="30"/>
       <!--new part for time remaining-->
-      <Label text=" Life: " />
-      <HBox fx:id="lifeBox" spacing="5" alignment="CENTER_LEFT"/>
-
-
 
       </children>
     </HBox>

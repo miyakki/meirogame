@@ -4,17 +4,10 @@ import javafx.scene.image.ImageView;
 public class MapData {
     public static final int TYPE_SPACE = 0;
     public static final int TYPE_WALL = 1;
-    //public static final int TYPE_OTHERS = 2;
-    public static final int TYPE_ITEM = 2;
-    public static final int TYPE_HEAL = 3;   // 回復アイテム
-    public static final int TYPE_DAMAGE = 4; // ダメージアイテム
-
+    public static final int TYPE_OTHERS = 2;
     private static final String mapImageFiles[] = {
             "png/SPACE.png",
-            "png/WALL.png",
-            "png/catUp2.png",
-            "png/catLeft1.png",
-            "png/catRight1.png"
+            "png/WALL.png"
     };
 
     private Image[] mapImages;
@@ -24,9 +17,9 @@ public class MapData {
     private int height; // height of the map
 
     MapData(int x, int y) {
-        mapImages = new Image[5];
+        mapImages = new Image[2];
         mapImageViews = new ImageView[y][x];
-        for (int i = 0; i < 5; i ++) {
+        for (int i = 0; i < 2; i ++) {
             mapImages[i] = new Image(mapImageFiles[i]);
         }
 
@@ -36,9 +29,6 @@ public class MapData {
 
         fillMap(MapData.TYPE_WALL);
         digMap(1, 3);
-        scatterItems(TYPE_ITEM, 2);
-        scatterItems(TYPE_HEAL, 2);
-        scatterItems(TYPE_DAMAGE, 2);
         setImageViews();
     }
 
@@ -107,28 +97,4 @@ public class MapData {
     public int getWidth() {
         return width;
     }
-    /*private void putItem(){
-        while(true){
-            int rx = (int)(Math.random() *width);
-            int ry = (int)(Math.random() *height);
-            if (maps[ry][rx] == TYPE_SPACE) {
-                maps[ry][rx] = TYPE_ITEM;
-                break;
-            }
-    	}
-    }*/
-    private void scatterItems(int type, int count) {
-    int placed = 0;
-    while (placed < count) {
-        int rx = (int) (Math.random() * width);
-        int ry = (int) (Math.random() * height);
-        // 床(TYPE_SPACE)かつ、スタート地点(1,1)以外に配置
-        if (getMap(rx, ry) == TYPE_SPACE && !(rx == 1 && ry == 1)) {
-            maps[ry][rx] = type;
-            placed++;
-        }
-    }
 }
-}
-
-
