@@ -57,13 +57,14 @@ public class MapGameController implements Initializable {
         int cx = c.getPosX();
         int cy = c.getPosY();
         mapGrid.getChildren().clear();
+        m.setImageViews();
         for (int y = 0; y < mapData.getHeight(); y ++) {
             for (int x = 0; x < mapData.getWidth(); x ++) {
                 int index = y * mapData.getWidth() + x;
                 if (x == cx && y == cy) {
                     mapGrid.add(c.getCharaImageView(), x, y);
                 } else {
-                    mapGrid.add(mapImageViews[index], x, y);
+                    mapGrid.add(m.getImageView(x, y), x, y);
                 }
             }
         }
@@ -231,7 +232,8 @@ public class MapGameController implements Initializable {
         mapData.setMap(x, y, MapData.TYPE_SPACE);
         // マップ表示用のImageViewも床に更新
         int index = y * mapData.getWidth() + x;
-        mapImageViews[index] = mapData.getImageView(x, y); 
+        //mapImageViews[index] = mapData.getImageView(x, y); 
+        drawMap(chara, mapData);
         drawLifeUI(); // ライフ表示を更新
     }
     
