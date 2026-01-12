@@ -1,5 +1,7 @@
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 
 public class MapData {
     public static final int TYPE_SPACE = 0;
@@ -9,13 +11,9 @@ public class MapData {
     public static final int TYPE_HEAL = 3;   // 回復アイテム
     public static final int TYPE_DAMAGE = 4; // ダメージアイテム
 
-    private static final String mapImageFiles[] = {
-            "png/SPACE.png",
-            "png/WALL.png",
-            "png/catUp2.png",
-            "png/catLeft1.png",
-            "png/catRight1.png"
-    };
+    private static final String ITEM_SHEET_PATH = "png/pipo-etcchara002a.png";
+    private static final int SHEET_ROWS = 4;
+    private static final int SHEET_COLS = 3;
 
     private Image[] mapImages;
     private ImageView[][] mapImageViews;
@@ -26,8 +24,22 @@ public class MapData {
     MapData(int x, int y) {
         mapImages = new Image[5];
         mapImageViews = new ImageView[y][x];
-        for (int i = 0; i < 5; i ++) {
-            mapImages[i] = new Image(mapImageFiles[i]);
+
+        // 床と壁の画像
+        mapImages[TYPE_SPACE] = new Image("png/SPACE.png");
+        mapImages[TYPE_WALL] = new Image("png/WALL.png");
+
+        // アイテムの画像
+        try {
+            Image itemSheet = new Image(ITEM_SHEET_PATH);
+            // TYPE_ITEM (2): 1行目（キラキラ）
+            mapImages[TYPE_ITEM] = extractImage(itemSheet, 0, 0);
+            // TYPE_HEAL (3): 3行目（宝石）
+            mapImages[TYPE_HEAL] = extractImage(itemSheet, 2, 0);
+            // TYPE_DAMAGE (4): 4行目（球体）
+            mapImages[TYPE_DAMAGE] = extractImage(itemSheet, 3, 0);
+        } catch (Exception e) {
+            System.err.println("画像の切り出しに失敗しました: " + e.getMessage());
         }
 
         width = x;
@@ -36,12 +48,22 @@ public class MapData {
 
         fillMap(MapData.TYPE_WALL);
         digMap(1, 3);
-        scatterItems(TYPE_ITEM, 2);
-        scatterItems(TYPE_HEAL, 2);
-        scatterItems(TYPE_DAMAGE, 2);
+        scatterItems(TYPE_ITEM, 2);   
+        scatterItems(TYPE_HEAL, 2);   
+        scatterItems(TYPE_DAMAGE, 2); 
         setImageViews();
     }
 
+    private Image extractImage(Image sheet, int row, int col) {
+        double frameWidthD = sheet.getWidth() / SHEET_COLS;
+        double frameHeightD = sheet.getHeight() / SHEET_ROWS;
+        
+        PixelReader reader = sheet.getPixelReader();
+        int startX = (int) Math.round(col * frameWidthD);
+        int startY = (int) Math.round(row * frameHeightD);
+        
+        return new WritableImage(reader, startX, startY, (int)frameWidthD, (int)frameHeightD);
+    }
     // fill two-dimentional arrays with a given number (maps[y][x])
     private void fillMap(int type) {
         for (int y = 0; y < height; y ++) {

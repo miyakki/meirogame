@@ -20,8 +20,8 @@ public class MoveChara {
     private static final int COLS = 3;
 
     public boolean useSpriteSheet = true;
-    private static final String SPRITE_SHEET_PATH = "./png/dog.png";
-    private final String pngPathPre = "png/cat";
+    private static final String SPRITE_SHEET_PATH = "./png/pipo-charachip002b.png";
+    private final String pngPathPre = "png/newchara";
     private final String pngPathSuf = ".png";
 
     private int posX;
