@@ -34,10 +34,13 @@ public class MapGameController implements Initializable {
 
     private int life = 3;
     private final String HEART_IMAGE_PATH = "png/catLeft2.png"; // ハートの画像パス
+    private int goalX;
+    private int goalY;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mapData = new MapData(21, 15);
+        decideGoalRightBottom();
         chara = new MoveChara(1, 1, mapData);
         mapImageViews = new ImageView[mapData.getHeight() * mapData.getWidth()];
         for (int y = 0; y < mapData.getHeight(); y ++) {
@@ -88,6 +91,28 @@ public class MapGameController implements Initializable {
         startTimer();
     }
 
+    private void decideGoalRightBottom() {
+        for (int y = mapData.getHeight() - 1; y >= 0; y--) {
+            for (int x = mapData.getWidth() - 1; x >= 0; x--) {
+                if (mapData.getMap(x,y) == MapData.TYPE_SPACE) {
+                    goalX = x;
+                    goalY = y;
+                    System.out.println("ゴール座標:(" + goalX + "," + goalY + ")");
+                    return;
+                }
+            }
+        }
+    }
+
+    private void checkGoal() {
+        if (chara.getPosX() == goalX && chara.getPosY() == goalY) {
+            System.out.println("ゲームクリア");
+            StageDB.getMainStage().hide();
+            StageDB.getMainSound().stop();
+            StageDB.getGameOverStage().show();
+        }
+    }
+
     // Get users' key actions
     public void keyAction(KeyEvent event) {
         KeyCode key = event.getCode();
@@ -108,6 +133,7 @@ public class MapGameController implements Initializable {
         printAction("UP");
         chara.setCharaDirection(MoveChara.TYPE_UP);
         boolean success = chara.move(0, -1);
+        checkGoal();
         if(success == true) {
             StageDB.playWalkSound();
         } else {
@@ -122,6 +148,7 @@ public class MapGameController implements Initializable {
         printAction("DOWN");
         chara.setCharaDirection(MoveChara.TYPE_DOWN);
         boolean success = chara.move(0, 1);
+        checkGoal();
         if(success == true) {
             StageDB.playWalkSound();
         } else {
@@ -136,6 +163,7 @@ public class MapGameController implements Initializable {
         printAction("LEFT");
         chara.setCharaDirection(MoveChara.TYPE_LEFT);
         boolean success = chara.move(-1, 0);
+        checkGoal();
         if(success == true) {
             StageDB.playWalkSound();
         } else {
@@ -150,6 +178,7 @@ public class MapGameController implements Initializable {
         printAction("RIGHT");
         chara.setCharaDirection(MoveChara.TYPE_RIGHT);
         boolean success = chara.move(1, 0);
+        checkGoal();
         if(success == true) {
             StageDB.playWalkSound();
         } else {
