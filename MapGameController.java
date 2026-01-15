@@ -107,6 +107,11 @@ public class MapGameController implements Initializable {
     private void checkGoal() {
         if (chara.getPosX() == goalX && chara.getPosY() == goalY) {
             System.out.println("ゲームクリア");
+
+            if (timer != null) {
+                timer.stop();
+            }
+
             StageDB.getMainStage().hide();
             StageDB.getMainSound().stop();
             StageDB.getGameOverStage().show();
@@ -192,6 +197,11 @@ public class MapGameController implements Initializable {
     public void func1ButtonAction(ActionEvent event) {
         try {
             System.out.println("func1");
+
+            if (timer != null) {
+                timer.stop();
+            }
+
             StageDB.getMainStage().hide();
             StageDB.getMainSound().stop();
             StageDB.getGameOverStage().show();
