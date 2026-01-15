@@ -10,6 +10,7 @@ public class MapData {
     public static final int TYPE_ITEM = 2;
     public static final int TYPE_HEAL = 3;   // 回復アイテム
     public static final int TYPE_DAMAGE = 4; // ダメージアイテム
+    public static final int TYPE_GOLE = 5;//ゴール
 
     private static final String ITEM_SHEET_PATH = "png/pipo-etcchara002a.png";
     private static final int SHEET_ROWS = 4;
@@ -22,7 +23,7 @@ public class MapData {
     private int height; // height of the map
 
     MapData(int x, int y) {
-        mapImages = new Image[5];
+        mapImages = new Image[6];
         mapImageViews = new ImageView[y][x];
 
         // 床と壁の画像
@@ -41,6 +42,7 @@ public class MapData {
         } catch (Exception e) {
             System.err.println("画像の切り出しに失敗しました: " + e.getMessage());
         }
+        mapImages[TYPE_GOLE] = new Image("png/goalpicture.png");
 
         width = x;
         height = y;
@@ -48,6 +50,7 @@ public class MapData {
 
         fillMap(MapData.TYPE_WALL);
         digMap(1, 3);
+        goleSetting(TYPE_GOLE);
         scatterItems(TYPE_ITEM, 2);   
         scatterItems(TYPE_HEAL, 2);   
         scatterItems(TYPE_DAMAGE, 2); 
@@ -139,6 +142,16 @@ public class MapData {
             }
     	}
     }*/
+    private void goleSetting(int type) {
+        for (int y = getHeight() - 1; y >= 0; y--) {
+            for (int x = getWidth() - 1; x >= 0; x--) {
+                if (getMap(x,y) == TYPE_SPACE) {
+                   maps[y][x] = type;
+                   return;
+                }
+            }
+        }
+    }
     private void scatterItems(int type, int count) {
     int placed = 0;
     while (placed < count) {

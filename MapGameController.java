@@ -33,7 +33,7 @@ public class MapGameController implements Initializable {
     private HBox lifeBox; // FXMLで定義したIDと紐付け
 
     private int life = 3;
-    private final String HEART_IMAGE_PATH = "png/catLeft2.png"; // ハートの画像パス
+    private final String HEART_IMAGE_PATH = "png/Life.png"; // ハートの画像パス
     private int goalX;
     private int goalY;
 
@@ -94,7 +94,7 @@ public class MapGameController implements Initializable {
     private void decideGoalRightBottom() {
         for (int y = mapData.getHeight() - 1; y >= 0; y--) {
             for (int x = mapData.getWidth() - 1; x >= 0; x--) {
-                if (mapData.getMap(x,y) == MapData.TYPE_SPACE) {
+                if (mapData.getMap(x,y) == MapData.TYPE_GOLE) {
                     goalX = x;
                     goalY = y;
                     System.out.println("ゴール座標:(" + goalX + "," + goalY + ")");
