@@ -37,6 +37,10 @@ public class MapGameController implements Initializable {
     private int goalX;
     private int goalY;
 
+    private java.util.List<Fireball> fireballs = new java.util.ArrayList<>();
+    private Timeline fireballTimeline; // 止めるために名前をつける
+    private Image fireballImg = new Image("png/Life.png");
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mapData = new MapData(21, 15);
@@ -53,6 +57,7 @@ public class MapGameController implements Initializable {
         drawLifeUI();
         // timer starts.
         startTimer();
+        startFireballTimer();
     }
 
     // Draw the map
@@ -70,6 +75,13 @@ public class MapGameController implements Initializable {
                     mapGrid.add(m.getImageView(x, y), x, y);
                 }
             }
+        }
+
+        for (Fireball f : fireballs) {
+            ImageView fv = new ImageView(fireballImg);
+            fv.setFitWidth(32);
+            fv.setFitHeight(32);
+            mapGrid.add(fv, f.x, f.y);
         }
     }
 
@@ -115,6 +127,10 @@ public class MapGameController implements Initializable {
             StageDB.getMainStage().hide();
             StageDB.getMainSound().stop();
             StageDB.getGameOverStage().show();
+
+            if (fireballTimeline != null) {
+                fireballTimeline.stop();
+            }
         }
     }
 
@@ -306,6 +322,31 @@ public class MapGameController implements Initializable {
         timer.play();
     }
 
+    private void startFireballTimer() {
+    fireballTimeline = new Timeline(
+        new KeyFrame(Duration.millis(300), e -> { // 0.3秒ごとに移動
+            fireballs.removeIf(f -> {
+                f.move(mapData.getWidth());
+                return !f.isAlive();
+            });
+
+            if (Math.random() < 0.5) {
+                int ry = (int)(Math.random() * (mapData.getHeight() - 2)) + 1;
+                fireballs.add(new Fireball(0, ry, 1));
+            }
+
+            for (Fireball f : fireballs) {
+                if (f.x == chara.getPosX() && f.y == chara.getPosY()) {
+                    reduceLife();
+                }
+            }
+            drawMap(chara, mapData);
+        })
+    );
+    fireballTimeline.setCycleCount(Timeline.INDEFINITE);
+    fireballTimeline.play();
+}
+
     private void onTimeUp(){
         try {
             System.out.println("Time Over");
@@ -314,6 +355,9 @@ public class MapGameController implements Initializable {
             StageDB.getMainSound().stop();
             StageDB.getGameOverSound().play();
             StageDB.getGameOverStage().show();
+            if (fireballTimeline != null) {
+                fireballTimeline.stop();
+            }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }

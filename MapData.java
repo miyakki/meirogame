@@ -166,4 +166,25 @@ public class MapData {
 }
 }
 
+class Fireball {
+    public int x, y;
+    private int dx; 
+    private boolean alive = true;
 
+    public Fireball(int x, int y, int dx) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+    }
+
+    public void move(int mapWidth) {
+        x += dx;
+        if (x < 0 || x >= mapWidth) {
+            alive = false;
+        }
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+}
