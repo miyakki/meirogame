@@ -39,7 +39,7 @@ public class MapGameController implements Initializable {
 
     private java.util.List<Fireball> fireballs = new java.util.ArrayList<>();
     private Timeline fireballTimeline; // 止めるために名前をつける
-    private Image fireballImg = new Image("png/Life.png");
+    private Image fireballImg = new Image("png/fireball.png");
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
