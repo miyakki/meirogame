@@ -148,7 +148,7 @@ public class MoveChara {
     }
 
     // move the cat
-    private boolean hasItem = false
+    private boolean hasItem = false;
     public boolean move(int dx, int dy ,boolean boost) {
         int speed = (hasItem && boost) ? 2 : 1;
         int nextX = posX + (dx * speed);

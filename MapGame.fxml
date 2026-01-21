@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.input.* ?>
 
-<VBox fx:controller="MapGameController" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx/11" onKeyPressed="#keyAction" nKeyReleased="#keyReleasedAction">
+<VBox fx:controller="MapGameController" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx/11" onKeyPressed="#keyAction" onKeyReleased="#keyReleasedAction">
   <padding>
     <Insets top="10" right="10" bottom="10" left="10"/>
   </padding>
