@@ -9,8 +9,7 @@ public class MapData {
     //public static final int TYPE_OTHERS = 2;
     public static final int TYPE_ITEM = 2;
     public static final int TYPE_HEAL = 3;   // 回復アイテム
-    public static final int TYPE_DAMAGE = 4; // ダメージアイテム
-    public static final int TYPE_GOLE = 5;//ゴール
+    public static final int TYPE_GOLE = 4;//ゴール
 
     private static final String ITEM_SHEET_PATH = "png/pipo-etcchara002a.png";
     private static final int SHEET_ROWS = 4;
@@ -23,7 +22,7 @@ public class MapData {
     private int height; // height of the map
 
     MapData(int x, int y) {
-        mapImages = new Image[6];
+        mapImages = new Image[5];
         mapImageViews = new ImageView[y][x];
 
         // 床と壁の画像
@@ -37,8 +36,6 @@ public class MapData {
             mapImages[TYPE_ITEM] = extractImage(itemSheet, 0, 0);
             // TYPE_HEAL (3): 3行目（宝石）
             mapImages[TYPE_HEAL] = extractImage(itemSheet, 2, 0);
-            // TYPE_DAMAGE (4): 4行目（球体）
-            mapImages[TYPE_DAMAGE] = extractImage(itemSheet, 3, 0);
         } catch (Exception e) {
             System.err.println("画像の切り出しに失敗しました: " + e.getMessage());
         }
@@ -53,7 +50,6 @@ public class MapData {
         goleSetting(TYPE_GOLE);
         scatterItems(TYPE_ITEM, 2);   
         scatterItems(TYPE_HEAL, 2);   
-        scatterItems(TYPE_DAMAGE, 2); 
         setImageViews();
     }
 
@@ -132,16 +128,7 @@ public class MapData {
     public int getWidth() {
         return width;
     }
-    /*private void putItem(){
-        while(true){
-            int rx = (int)(Math.random() *width);
-            int ry = (int)(Math.random() *height);
-            if (maps[ry][rx] == TYPE_SPACE) {
-                maps[ry][rx] = TYPE_ITEM;
-                break;
-            }
-    	}
-    }*/
+    
     private void goleSetting(int type) {
         for (int y = getHeight() - 1; y >= 0; y--) {
             for (int x = getWidth() - 1; x >= 0; x--) {

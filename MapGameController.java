@@ -258,6 +258,7 @@ public class MapGameController implements Initializable {
         drawLifeUI();
         if (life <= 0) {
          System.out.println("No Lives Left!");
+         timer.stop();
          onTimeUp();
         }
     }
@@ -275,11 +276,7 @@ public class MapGameController implements Initializable {
             System.out.println("Life Up!");
             life = Math.min(3, life + 1); // 最大3まで回復
             removeItem(curX, curY);
-        } else if (tileType == MapData.TYPE_DAMAGE) {
-            System.out.println("Life Down!");
-            reduceLife(); // 前の回答で作ったライフ減少メソッド
-            removeItem(curX, curY);
-        }
+        } 
     }
 
 // アイテムを拾ったらその場所を床(SPACE)に戻す
