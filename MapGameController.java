@@ -134,9 +134,14 @@ public class MapGameController implements Initializable {
         }
     }
 
+     private boolean isUPressed = false; // Uキーの状態管理
     // Get users' key actions
     public void keyAction(KeyEvent event) {
         KeyCode key = event.getCode();
+        if (key == KeyCode.U) {
+            isUPressed = true; 
+        }
+
         System.out.println("keycode:" + key);
         if (key == KeyCode.A) {
             leftButtonAction();
@@ -148,12 +153,17 @@ public class MapGameController implements Initializable {
             rightButtonAction();
         }
     }
-
+    @FXML
+    public void keyReleasedAction(KeyEvent event) {
+        if (event.getCode() == KeyCode.U) {
+            isUPressed = false; // Uキーが離された
+        }
+    }
     // Operations for going the cat up
     public void upButtonAction() {
         printAction("UP");
         chara.setCharaDirection(MoveChara.TYPE_UP);
-        boolean success = chara.move(0, -1);
+        boolean success = chara.move(0, -1, isUPressed);
         checkGoal();
         if(success == true) {
             StageDB.playWalkSound();
@@ -168,7 +178,7 @@ public class MapGameController implements Initializable {
     public void downButtonAction() {
         printAction("DOWN");
         chara.setCharaDirection(MoveChara.TYPE_DOWN);
-        boolean success = chara.move(0, 1);
+        boolean success = chara.move(0, 1, isUPressed);
         checkGoal();
         if(success == true) {
             StageDB.playWalkSound();
@@ -183,7 +193,7 @@ public class MapGameController implements Initializable {
     public void leftButtonAction() {
         printAction("LEFT");
         chara.setCharaDirection(MoveChara.TYPE_LEFT);
-        boolean success = chara.move(-1, 0);
+        boolean success = chara.move(-1, 0, isUPressed);
         checkGoal();
         if(success == true) {
             StageDB.playWalkSound();
@@ -198,7 +208,7 @@ public class MapGameController implements Initializable {
     public void rightButtonAction() {
         printAction("RIGHT");
         chara.setCharaDirection(MoveChara.TYPE_RIGHT);
-        boolean success = chara.move(1, 0);
+        boolean success = chara.move(1, 0, isUPressed);
         checkGoal();
         if(success == true) {
             StageDB.playWalkSound();

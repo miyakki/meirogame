@@ -35,10 +35,7 @@ public class MoveChara {
 
     private int charaDirection;
     private int speed = 1;
-    public void setSpeed(int s ){
-        this.speed = s;
-    }
-
+    
     MoveChara(int startX, int startY, MapData mapData) {
         this.mapData = mapData;
         charaImages = new Image[ROWS][COLS];
@@ -151,13 +148,15 @@ public class MoveChara {
     }
 
     // move the cat
-    public boolean move(int dx, int dy) {
+    private boolean hasItem = false
+    public boolean move(int dx, int dy ,boolean boost) {
+        int speed = (hasItem && boost) ? 2 : 1;
         int nextX = posX + (dx * speed);
         int nextY = posY + (dy * speed);
         if (mapData.getMap(nextX, nextY) == MapData.TYPE_ITEM){
             StageDB.playGetItemSound();
             System.out.println("Speed Up!");
-            setSpeed(2);
+            this.hasItem = true;
             mapData.setMap(nextX, nextY, MapData.TYPE_SPACE);
             mapData.setImageViews();
         }
