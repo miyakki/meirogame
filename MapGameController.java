@@ -99,7 +99,9 @@ public class MapGameController implements Initializable {
         }
 
         drawMap(chara, mapData);
-
+        if (timer != null) {
+                timer.stop();
+            }
         startTimer();
     }
 
@@ -337,10 +339,10 @@ public class MapGameController implements Initializable {
                 return !f.isAlive();
             });
 
-            if (Math.random() < 0.5) {
+            
                 int ry = (int)(Math.random() * (mapData.getHeight() - 2)) + 1;
                 fireballs.add(new Fireball(0, ry, 1));
-            }
+            
 
             for (Fireball f : fireballs) {
                 if (f.x == chara.getPosX() && f.y == chara.getPosY()) {
